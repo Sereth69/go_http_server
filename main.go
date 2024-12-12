@@ -49,9 +49,21 @@ func main() {
 	mux.Handle("/app/", fsHandler)
 
 	mux.HandleFunc("/api/healthz", handlerReadiness)
-	mux.HandleFunc("/api/validate_chirp", handlerChirpsValidate)
 
 	mux.HandleFunc("/api/users", apiCfg.handlerUsersCreate)
+
+	mux.HandleFunc("/api/chirps", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPost:
+			apiCfg.handlerChirpsCreate(w, r)
+		case http.MethodGet:
+			apiCfg.handlerChirpsRetrieve(w, r)
+		default:
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+	})
+
+	mux.HandleFunc("GET /api/chirps/{chirpID}", apiCfg.handlerChirpsGet)
 
 	mux.HandleFunc("/admin/reset", apiCfg.handlerReset)
 	mux.HandleFunc("/admin/metrics", apiCfg.handlerMetrics)
