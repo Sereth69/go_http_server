@@ -52,7 +52,7 @@ func (cfg *apiConfig) handlerUsersUpdate(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	respondWithJSON(w, http.StatusCreated, response{
+	respondWithJSON(w, http.StatusOK, response{
 		User: User{
 			ID:          user.ID,
 			CreatedAt:   user.CreatedAt,
